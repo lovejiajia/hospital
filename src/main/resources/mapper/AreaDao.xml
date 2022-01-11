@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.AreaDao">
+
+    <resultMap type="com.aaa.entity.Area" id="AreaMap">
+        <result property="areaid" column="areaId" jdbcType="INTEGER"/>
+        <result property="areaname" column="areaName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AreaMap">
+        select
+          areaId, areaName
+        from area
+        where areaId = #{areaid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryList" resultMap="AreaMap">
+        select
+          areaId, areaName
+        from area
+        <where>
+            <if test="areaid != null">
+                and areaId = #{areaid}
+            </if>
+            <if test="areaname != null and areaname != ''">
+                and areaName like concat('%',#{name,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+    </select>
+
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="areaid" useGeneratedKeys="true">
+        insert into area(areaName)
+        values (#{areaname})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update area
+        <set>
+            <if test="areaname != null and areaname != ''">
+                areaName = concat('%',#{name,jdbcType=VARCHAR},'%'),
+            </if>
+        </set>
+        where areaId = #{areaid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from area where areaId = #{areaid}
+    </delete>
+
+</mapper>
+

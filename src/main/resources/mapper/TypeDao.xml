@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.TypeDao">
+
+    <resultMap type="com.aaa.entity.Type" id="TypeMap">
+        <result property="typeid" column="typeId" jdbcType="INTEGER"/>
+        <result property="typename" column="typeName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TypeMap">
+        select
+          typeId, typeName
+        from type
+        where typeId = #{typeid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TypeMap">
+        select
+          typeId, typeName
+        from type
+        <where>
+            <if test="typeid != null">
+                and typeId = #{typeid}
+            </if>
+            <if test="typename != null and typename != ''">
+                and typeName = #{typename}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from type
+        <where>
+            <if test="typeid != null">
+                and typeId = #{typeid}
+            </if>
+            <if test="typename != null and typename != ''">
+                and typeName = #{typename}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="typeid" useGeneratedKeys="true">
+        insert into type(typeName)
+        values (#{typename})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="typeid" useGeneratedKeys="true">
+        insert into type(typeName)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.typename})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="typeid" useGeneratedKeys="true">
+        insert into type(typeName)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.typename})
+        </foreach>
+        on duplicate key update
+        typeName = values(typeName)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update type
+        <set>
+            <if test="typename != null and typename != ''">
+                typeName = #{typename},
+            </if>
+        </set>
+        where typeId = #{typeid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from type where typeId = #{typeid}
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.PharmacyDao">
+
+    <resultMap type="com.aaa.entity.Pharmacy" id="PharmacyMap">
+        <result property="pharmacyid" column="pharmacyId" jdbcType="INTEGER"/>
+        <result property="pharmacyname" column="pharmacyName" jdbcType="VARCHAR"/>
+        <result property="drugstoreid" column="drugstoreId" jdbcType="INTEGER"/>
+        <result property="skullid" column="skullId" jdbcType="INTEGER"/>
+        <result property="warehouseid" column="warehouseId" jdbcType="INTEGER"/>
+        <result property="unit" column="unit" jdbcType="INTEGER"/>
+        <result property="sellingprice" column="sellingPrice" jdbcType="VARCHAR"/>
+        <result property="area" column="area" jdbcType="INTEGER"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="producedate" column="produceDate" jdbcType="TIMESTAMP"/>
+        <result property="validdate" column="validDate" jdbcType="TIMESTAMP"/>
+        <result property="drugstorenum" column="drugstorenum" jdbcType="INTEGER"/>
+        <result property="skullbatch" column="skullbatch" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="PharmacyMap">
+        select
+          pharmacyId, pharmacyName, drugstoreId, skullId, warehouseId, unit, sellingPrice, area, type, produceDate, validDate, drugstorenum, skullbatch
+        from pharmacy
+        where pharmacyId = #{pharmacyid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="PharmacyMap">
+        select
+          pharmacyId, pharmacyName, drugstoreId, skullId, warehouseId, unit, sellingPrice, area, type, produceDate, validDate, drugstorenum, skullbatch
+        from pharmacy
+        <where>
+            <if test="pharmacyid != null">
+                and pharmacyId = #{pharmacyid}
+            </if>
+            <if test="pharmacyname != null and pharmacyname != ''">
+                and pharmacyName = #{pharmacyname}
+            </if>
+            <if test="drugstoreid != null">
+                and drugstoreId = #{drugstoreid}
+            </if>
+            <if test="skullid != null">
+                and skullId = #{skullid}
+            </if>
+            <if test="warehouseid != null">
+                and warehouseId = #{warehouseid}
+            </if>
+            <if test="unit != null">
+                and unit = #{unit}
+            </if>
+            <if test="sellingprice != null">
+                and sellingPrice = #{sellingprice}
+            </if>
+            <if test="area != null">
+                and area = #{area}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="producedate != null">
+                and produceDate = #{producedate}
+            </if>
+            <if test="validdate != null">
+                and validDate = #{validdate}
+            </if>
+            <if test="drugstorenum != null">
+                and drugstorenum = #{drugstorenum}
+            </if>
+            <if test="skullbatch != null and skullbatch != ''">
+                and skullbatch = #{skullbatch}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from pharmacy
+        <where>
+            <if test="pharmacyid != null">
+                and pharmacyId = #{pharmacyid}
+            </if>
+            <if test="pharmacyname != null and pharmacyname != ''">
+                and pharmacyName = #{pharmacyname}
+            </if>
+            <if test="drugstoreid != null">
+                and drugstoreId = #{drugstoreid}
+            </if>
+            <if test="skullid != null">
+                and skullId = #{skullid}
+            </if>
+            <if test="warehouseid != null">
+                and warehouseId = #{warehouseid}
+            </if>
+            <if test="unit != null">
+                and unit = #{unit}
+            </if>
+            <if test="sellingprice != null">
+                and sellingPrice = #{sellingprice}
+            </if>
+            <if test="area != null">
+                and area = #{area}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="producedate != null">
+                and produceDate = #{producedate}
+            </if>
+            <if test="validdate != null">
+                and validDate = #{validdate}
+            </if>
+            <if test="drugstorenum != null">
+                and drugstorenum = #{drugstorenum}
+            </if>
+            <if test="skullbatch != null and skullbatch != ''">
+                and skullbatch = #{skullbatch}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="pharmacyid" useGeneratedKeys="true">
+        insert into pharmacy(pharmacyName, drugstoreId, skullId, warehouseId, unit, sellingPrice, area, type, produceDate, validDate, drugstorenum, skullbatch)
+        values (#{pharmacyname}, #{drugstoreid}, #{skullid}, #{warehouseid}, #{unit}, #{sellingprice}, #{area}, #{type}, #{producedate}, #{validdate}, #{drugstorenum}, #{skullbatch})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="pharmacyid" useGeneratedKeys="true">
+        insert into pharmacy(pharmacyName, drugstoreId, skullId, warehouseId, unit, sellingPrice, area, type, produceDate, validDate, drugstorenum, skullbatch)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.pharmacyname}, #{entity.drugstoreid}, #{entity.skullid}, #{entity.warehouseid}, #{entity.unit}, #{entity.sellingprice}, #{entity.area}, #{entity.type}, #{entity.producedate}, #{entity.validdate}, #{entity.drugstorenum}, #{entity.skullbatch})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="pharmacyid" useGeneratedKeys="true">
+        insert into pharmacy(pharmacyName, drugstoreId, skullId, warehouseId, unit, sellingPrice, area, type, produceDate, validDate, drugstorenum, skullbatch)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.pharmacyname}, #{entity.drugstoreid}, #{entity.skullid}, #{entity.warehouseid}, #{entity.unit}, #{entity.sellingprice}, #{entity.area}, #{entity.type}, #{entity.producedate}, #{entity.validdate}, #{entity.drugstorenum}, #{entity.skullbatch})
+        </foreach>
+        on duplicate key update
+        pharmacyName = values(pharmacyName),
+        drugstoreId = values(drugstoreId),
+        skullId = values(skullId),
+        warehouseId = values(warehouseId),
+        unit = values(unit),
+        sellingPrice = values(sellingPrice),
+        area = values(area),
+        type = values(type),
+        produceDate = values(produceDate),
+        validDate = values(validDate),
+        drugstorenum = values(drugstorenum),
+        skullbatch = values(skullbatch)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update pharmacy
+        <set>
+            <if test="pharmacyname != null and pharmacyname != ''">
+                pharmacyName = #{pharmacyname},
+            </if>
+            <if test="drugstoreid != null">
+                drugstoreId = #{drugstoreid},
+            </if>
+            <if test="skullid != null">
+                skullId = #{skullid},
+            </if>
+            <if test="warehouseid != null">
+                warehouseId = #{warehouseid},
+            </if>
+            <if test="unit != null">
+                unit = #{unit},
+            </if>
+            <if test="sellingprice != null">
+                sellingPrice = #{sellingprice},
+            </if>
+            <if test="area != null">
+                area = #{area},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="producedate != null">
+                produceDate = #{producedate},
+            </if>
+            <if test="validdate != null">
+                validDate = #{validdate},
+            </if>
+            <if test="drugstorenum != null">
+                drugstorenum = #{drugstorenum},
+            </if>
+            <if test="skullbatch != null and skullbatch != ''">
+                skullbatch = #{skullbatch},
+            </if>
+        </set>
+        where pharmacyId = #{pharmacyid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from pharmacy where pharmacyId = #{pharmacyid}
+    </delete>
+
+</mapper>
+

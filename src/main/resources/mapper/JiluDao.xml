@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.JiluDao">
+
+    <resultMap type="com.aaa.entity.Jilu" id="JiluMap">
+        <result property="jiluid" column="jiluid" jdbcType="INTEGER"/>
+        <result property="jiluname" column="jiluname" jdbcType="VARCHAR"/>
+        <result property="jilutime" column="jilutime" jdbcType="TIMESTAMP"/>
+        <result property="jilutype" column="jilutype" jdbcType="VARCHAR"/>
+        <result property="jilupeople" column="jilupeople" jdbcType="VARCHAR"/>
+        <result property="jilunumber" column="jilunumber" jdbcType="INTEGER"/>
+        <result property="jilupihao" column="jilupihao" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="JiluMap">
+        select
+          jiluid, jiluname, jilutime, jilutype, jilupeople, jilunumber, jilupihao
+        from jilu
+        where jiluid = #{jiluid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="JiluMap">
+        select
+          jiluid, jiluname, jilutime, jilutype, jilupeople, jilunumber, jilupihao
+        from jilu
+        <where>
+            <if test="jiluid != null">
+                and jiluid = #{jiluid}
+            </if>
+            <if test="jiluname != null and jiluname != ''">
+                and jiluname = #{jiluname}
+            </if>
+            <if test="jilutime != null">
+                and jilutime = #{jilutime}
+            </if>
+            <if test="jilutype != null and jilutype != ''">
+                and jilutype = #{jilutype}
+            </if>
+            <if test="jilupeople != null and jilupeople != ''">
+                and jilupeople = #{jilupeople}
+            </if>
+            <if test="jilunumber != null">
+                and jilunumber = #{jilunumber}
+            </if>
+            <if test="jilupihao != null and jilupihao != ''">
+                and jilupihao = #{jilupihao}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from jilu
+        <where>
+            <if test="jiluid != null">
+                and jiluid = #{jiluid}
+            </if>
+            <if test="jiluname != null and jiluname != ''">
+                and jiluname = #{jiluname}
+            </if>
+            <if test="jilutime != null">
+                and jilutime = #{jilutime}
+            </if>
+            <if test="jilutype != null and jilutype != ''">
+                and jilutype = #{jilutype}
+            </if>
+            <if test="jilupeople != null and jilupeople != ''">
+                and jilupeople = #{jilupeople}
+            </if>
+            <if test="jilunumber != null">
+                and jilunumber = #{jilunumber}
+            </if>
+            <if test="jilupihao != null and jilupihao != ''">
+                and jilupihao = #{jilupihao}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="jiluid" useGeneratedKeys="true">
+        insert into jilu(jiluname, jilutime, jilutype, jilupeople, jilunumber, jilupihao)
+        values (#{jiluname}, #{jilutime}, #{jilutype}, #{jilupeople}, #{jilunumber}, #{jilupihao})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="jiluid" useGeneratedKeys="true">
+        insert into jilu(jiluname, jilutime, jilutype, jilupeople, jilunumber, jilupihao)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.jiluname}, #{entity.jilutime}, #{entity.jilutype}, #{entity.jilupeople}, #{entity.jilunumber}, #{entity.jilupihao})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="jiluid" useGeneratedKeys="true">
+        insert into jilu(jiluname, jilutime, jilutype, jilupeople, jilunumber, jilupihao)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.jiluname}, #{entity.jilutime}, #{entity.jilutype}, #{entity.jilupeople}, #{entity.jilunumber}, #{entity.jilupihao})
+        </foreach>
+        on duplicate key update
+        jiluname = values(jiluname),
+        jilutime = values(jilutime),
+        jilutype = values(jilutype),
+        jilupeople = values(jilupeople),
+        jilunumber = values(jilunumber),
+        jilupihao = values(jilupihao)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update jilu
+        <set>
+            <if test="jiluname != null and jiluname != ''">
+                jiluname = #{jiluname},
+            </if>
+            <if test="jilutime != null">
+                jilutime = #{jilutime},
+            </if>
+            <if test="jilutype != null and jilutype != ''">
+                jilutype = #{jilutype},
+            </if>
+            <if test="jilupeople != null and jilupeople != ''">
+                jilupeople = #{jilupeople},
+            </if>
+            <if test="jilunumber != null">
+                jilunumber = #{jilunumber},
+            </if>
+            <if test="jilupihao != null and jilupihao != ''">
+                jilupihao = #{jilupihao},
+            </if>
+        </set>
+        where jiluid = #{jiluid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from jilu where jiluid = #{jiluid}
+    </delete>
+
+</mapper>
+

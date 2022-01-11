@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.InoutpatienttypeDao">
+
+    <resultMap type="com.aaa.entity.Inoutpatienttype" id="InoutpatienttypeMap">
+        <result property="inoutpatientid" column="inoutpatientId" jdbcType="INTEGER"/>
+        <result property="projectname" column="projectName" jdbcType="VARCHAR"/>
+        <result property="unit" column="unit" jdbcType="INTEGER"/>
+        <result property="bigprojectid" column="bigproJectId" jdbcType="INTEGER"/>
+        <result property="price" column="price" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="InoutpatienttypeMap">
+        select
+          inoutpatientId, projectName, unit, bigproJectId, price
+        from inoutpatienttype
+        where inoutpatientId = #{inoutpatientid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="InoutpatienttypeMap">
+        select
+          inoutpatientId, projectName, unit, bigproJectId, price
+        from inoutpatienttype
+        <where>
+            <if test="inoutpatientid != null">
+                and inoutpatientId = #{inoutpatientid}
+            </if>
+            <if test="projectname != null and projectname != ''">
+                and projectName = #{projectname}
+            </if>
+            <if test="unit != null">
+                and unit = #{unit}
+            </if>
+            <if test="bigprojectid != null">
+                and bigproJectId = #{bigprojectid}
+            </if>
+            <if test="price != null">
+                and price = #{price}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from inoutpatienttype
+        <where>
+            <if test="inoutpatientid != null">
+                and inoutpatientId = #{inoutpatientid}
+            </if>
+            <if test="projectname != null and projectname != ''">
+                and projectName = #{projectname}
+            </if>
+            <if test="unit != null">
+                and unit = #{unit}
+            </if>
+            <if test="bigprojectid != null">
+                and bigproJectId = #{bigprojectid}
+            </if>
+            <if test="price != null">
+                and price = #{price}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="inoutpatientid" useGeneratedKeys="true">
+        insert into inoutpatienttype(projectName, unit, bigproJectId, price)
+        values (#{projectname}, #{unit}, #{bigprojectid}, #{price})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="inoutpatientid" useGeneratedKeys="true">
+        insert into inoutpatienttype(projectName, unit, bigproJectId, price)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.projectname}, #{entity.unit}, #{entity.bigprojectid}, #{entity.price})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="inoutpatientid" useGeneratedKeys="true">
+        insert into inoutpatienttype(projectName, unit, bigproJectId, price)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.projectname}, #{entity.unit}, #{entity.bigprojectid}, #{entity.price})
+        </foreach>
+        on duplicate key update
+        projectName = values(projectName),
+        unit = values(unit),
+        bigproJectId = values(bigproJectId),
+        price = values(price)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update inoutpatienttype
+        <set>
+            <if test="projectname != null and projectname != ''">
+                projectName = #{projectname},
+            </if>
+            <if test="unit != null">
+                unit = #{unit},
+            </if>
+            <if test="bigprojectid != null">
+                bigproJectId = #{bigprojectid},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+        </set>
+        where inoutpatientId = #{inoutpatientid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from inoutpatienttype where inoutpatientId = #{inoutpatientid}
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.SkullDao">
+
+    <resultMap type="com.aaa.entity.Skull" id="SkullMap">
+        <result property="skullid" column="skullId" jdbcType="INTEGER"/>
+        <result property="skullname" column="skullName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SkullMap">
+        select
+          skullId, skullName
+        from skull
+        where skullId = #{skullid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SkullMap">
+        select
+          skullId, skullName
+        from skull
+        <where>
+            <if test="skullid != null">
+                and skullId = #{skullid}
+            </if>
+            <if test="skullname != null and skullname != ''">
+                and skullName = #{skullname}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from skull
+        <where>
+            <if test="skullid != null">
+                and skullId = #{skullid}
+            </if>
+            <if test="skullname != null and skullname != ''">
+                and skullName = #{skullname}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="skullid" useGeneratedKeys="true">
+        insert into skull(skullName)
+        values (#{skullname})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="skullid" useGeneratedKeys="true">
+        insert into skull(skullName)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.skullname})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="skullid" useGeneratedKeys="true">
+        insert into skull(skullName)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.skullname})
+        </foreach>
+        on duplicate key update
+        skullName = values(skullName)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update skull
+        <set>
+            <if test="skullname != null and skullname != ''">
+                skullName = #{skullname},
+            </if>
+        </set>
+        where skullId = #{skullid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from skull where skullId = #{skullid}
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.RegisterDao">
+
+    <resultMap type="com.aaa.entity.Register" id="RegisterMap">
+        <result property="registerid" column="registerid" jdbcType="INTEGER"/>
+        <result property="username" column="userName" jdbcType="VARCHAR"/>
+        <result property="age" column="age" jdbcType="INTEGER"/>
+        <result property="sex" column="sex" jdbcType="VARCHAR"/>
+        <result property="department" column="department" jdbcType="INTEGER"/>
+        <result property="doctor" column="doctor" jdbcType="INTEGER"/>
+        <result property="diagnose" column="diagnose" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+        <result property="phone" column="Phone" jdbcType="VARCHAR"/>
+        <result property="idcard" column="Idcard" jdbcType="VARCHAR"/>
+        <result property="registerdate" column="registerDate" jdbcType="TIMESTAMP"/>
+        <result property="bednum" column="bedNum" jdbcType="INTEGER"/>
+        <result property="operator" column="Operator" jdbcType="VARCHAR"/>
+        <result property="money" column="money" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="enddate" column="endDate" jdbcType="TIMESTAMP"/>
+        <result property="price" column="price" jdbcType="VARCHAR"/>
+        <result property="discount" column="discount" jdbcType="VARCHAR"/>
+        <result property="zhuan" column="zhuan" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <select id="queryByName" resultMap="RegisterMap">
+        select
+          r.registerid, r.userName, r.age, r.sex, d.department, do.doctorName, r.diagnose, r.address, r.Phone, r.Idcard, r.registerDate, r.bedNum, r.Operator, r.money, r.state, r.endDate, r.price, r.discount, r.zhuan
+        from register r , doctor do, departments d where r.department = d.departmentId and r.doctor = do.doctorId
+        and userName like concat('%' , #{userName , jdbcType = VARCHAR} , '%')
+    </select>
+
+    <select id="queueListRegister" resultMap="RegisterMap">
+        select
+            r.registerid, r.userName, r.age, r.sex, d.department, do.doctorName, r.diagnose, r.address, r.Phone, r.Idcard, r.registerDate, r.bedNum, r.Operator, r.money, r.state, r.endDate, r.price, r.discount, r.zhuan
+        from register r , doctor do, departments d where r.department = d.departmentId and r.doctor = do.doctorId
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="registerid" useGeneratedKeys="true">
+        insert into register(userName, age, sex, department, doctor, diagnose, address, Phone, Idcard, registerDate, bedNum, Operator, money, state, endDate, price, discount, zhuan)
+        values (#{username}, #{age}, #{sex}, #{department}, #{doctor}, #{diagnose}, #{address}, #{phone}, #{idcard}, #{registerdate}, #{bednum}, #{operator}, #{money}, #{state}, #{enddate}, #{price}, #{discount}, #{zhuan})
+    </insert>
+
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from register where registerid = #{registerid}
+    </delete>
+
+</mapper>
+

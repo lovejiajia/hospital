@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.BedDao">
+
+    <resultMap type="com.aaa.entity.Bed" id="BedMap">
+        <result property="bedid" column="bedId" jdbcType="INTEGER"/>
+        <result property="bedname" column="bedname" jdbcType="VARCHAR"/>
+        <result property="departmentid" column="departmentId" jdbcType="INTEGER"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="price" column="Price" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BedMap">
+        select
+          bedId, bedname, departmentId, state, Price
+        from bed
+        where bedId = #{bedid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BedMap">
+        select
+          bedId, bedname, departmentId, state, Price
+        from bed
+        <where>
+            <if test="bedid != null">
+                and bedId = #{bedid}
+            </if>
+            <if test="bedname != null and bedname != ''">
+                and bedname = #{bedname}
+            </if>
+            <if test="departmentid != null">
+                and departmentId = #{departmentid}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="price != null">
+                and Price = #{price}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from bed
+        <where>
+            <if test="bedid != null">
+                and bedId = #{bedid}
+            </if>
+            <if test="bedname != null and bedname != ''">
+                and bedname = #{bedname}
+            </if>
+            <if test="departmentid != null">
+                and departmentId = #{departmentid}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="price != null">
+                and Price = #{price}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="bedid" useGeneratedKeys="true">
+        insert into bed(bedname, departmentId, state, Price)
+        values (#{bedname}, #{departmentid}, #{state}, #{price})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="bedid" useGeneratedKeys="true">
+        insert into bed(bedname, departmentId, state, Price)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.bedname}, #{entity.departmentid}, #{entity.state}, #{entity.price})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="bedid" useGeneratedKeys="true">
+        insert into bed(bedname, departmentId, state, Price)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.bedname}, #{entity.departmentid}, #{entity.state}, #{entity.price})
+        </foreach>
+        on duplicate key update
+        bedname = values(bedname),
+        departmentId = values(departmentId),
+        state = values(state),
+        Price = values(Price)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update bed
+        <set>
+            <if test="bedname != null and bedname != ''">
+                bedname = #{bedname},
+            </if>
+            <if test="departmentid != null">
+                departmentId = #{departmentid},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="price != null">
+                Price = #{price},
+            </if>
+        </set>
+        where bedId = #{bedid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from bed where bedId = #{bedid}
+    </delete>
+
+</mapper>
+

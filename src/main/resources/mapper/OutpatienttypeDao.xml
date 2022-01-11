@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.OutpatienttypeDao">
+
+    <resultMap type="com.aaa.entity.Outpatienttype" id="OutpatienttypeMap">
+        <result property="outpatientid" column="outpatientId" jdbcType="INTEGER"/>
+        <result property="projectname" column="projectName" jdbcType="VARCHAR"/>
+        <result property="unit" column="unit" jdbcType="INTEGER"/>
+        <result property="bigprojectid" column="bigprojectId" jdbcType="INTEGER"/>
+        <result property="price" column="price" jdbcType="VARCHAR"/>
+        <result property="ostate" column="ostate" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="OutpatienttypeMap">
+        select
+          outpatientId, projectName, unit, bigprojectId, price, ostate
+        from outpatienttype
+        where outpatientId = #{outpatientid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="OutpatienttypeMap">
+        select
+          outpatientId, projectName, unit, bigprojectId, price, ostate
+        from outpatienttype
+        <where>
+            <if test="outpatientid != null">
+                and outpatientId = #{outpatientid}
+            </if>
+            <if test="projectname != null and projectname != ''">
+                and projectName = #{projectname}
+            </if>
+            <if test="unit != null">
+                and unit = #{unit}
+            </if>
+            <if test="bigprojectid != null">
+                and bigprojectId = #{bigprojectid}
+            </if>
+            <if test="price != null">
+                and price = #{price}
+            </if>
+            <if test="ostate != null">
+                and ostate = #{ostate}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from outpatienttype
+        <where>
+            <if test="outpatientid != null">
+                and outpatientId = #{outpatientid}
+            </if>
+            <if test="projectname != null and projectname != ''">
+                and projectName = #{projectname}
+            </if>
+            <if test="unit != null">
+                and unit = #{unit}
+            </if>
+            <if test="bigprojectid != null">
+                and bigprojectId = #{bigprojectid}
+            </if>
+            <if test="price != null">
+                and price = #{price}
+            </if>
+            <if test="ostate != null">
+                and ostate = #{ostate}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="outpatientid" useGeneratedKeys="true">
+        insert into outpatienttype(projectName, unit, bigprojectId, price, ostate)
+        values (#{projectname}, #{unit}, #{bigprojectid}, #{price}, #{ostate})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="outpatientid" useGeneratedKeys="true">
+        insert into outpatienttype(projectName, unit, bigprojectId, price, ostate)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.projectname}, #{entity.unit}, #{entity.bigprojectid}, #{entity.price}, #{entity.ostate})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="outpatientid" useGeneratedKeys="true">
+        insert into outpatienttype(projectName, unit, bigprojectId, price, ostate)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.projectname}, #{entity.unit}, #{entity.bigprojectid}, #{entity.price}, #{entity.ostate})
+        </foreach>
+        on duplicate key update
+        projectName = values(projectName),
+        unit = values(unit),
+        bigprojectId = values(bigprojectId),
+        price = values(price),
+        ostate = values(ostate)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update outpatienttype
+        <set>
+            <if test="projectname != null and projectname != ''">
+                projectName = #{projectname},
+            </if>
+            <if test="unit != null">
+                unit = #{unit},
+            </if>
+            <if test="bigprojectid != null">
+                bigprojectId = #{bigprojectid},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="ostate != null">
+                ostate = #{ostate},
+            </if>
+        </set>
+        where outpatientId = #{outpatientid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from outpatienttype where outpatientId = #{outpatientid}
+    </delete>
+
+</mapper>
+

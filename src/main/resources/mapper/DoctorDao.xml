@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.DoctorDao">
+
+    <resultMap type="com.aaa.entity.Doctor" id="DoctorMap">
+        <result property="doctorid" column="doctorId" jdbcType="INTEGER"/>
+        <result property="doctorname" column="doctorName" jdbcType="VARCHAR"/>
+        <result property="departmentid" column="departmentId" jdbcType="INTEGER"/>
+        <result property="registeredid" column="registeredId" jdbcType="INTEGER"/>
+        <result property="dstate" column="dstate" jdbcType="INTEGER"/>
+        <result property="amstarttime" column="amStartTime" jdbcType="VARCHAR"/>
+        <result property="amendtime" column="amEndTime" jdbcType="VARCHAR"/>
+        <result property="pmstarttime" column="pmStartTime" jdbcType="VARCHAR"/>
+        <result property="pmendtime" column="pmEndTime" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="DoctorMap">
+        select
+          doctorId, doctorName, departmentId, registeredId, dstate, amStartTime, amEndTime, pmStartTime, pmEndTime
+        from doctor
+        where doctorId = #{doctorid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="DoctorMap">
+        select
+          doctorId, doctorName, departmentId, registeredId, dstate, amStartTime, amEndTime, pmStartTime, pmEndTime
+        from doctor
+        <where>
+            <if test="doctorid != null">
+                and doctorId = #{doctorid}
+            </if>
+            <if test="doctorname != null and doctorname != ''">
+                and doctorName = #{doctorname}
+            </if>
+            <if test="departmentid != null">
+                and departmentId = #{departmentid}
+            </if>
+            <if test="registeredid != null">
+                and registeredId = #{registeredid}
+            </if>
+            <if test="dstate != null">
+                and dstate = #{dstate}
+            </if>
+            <if test="amstarttime != null and amstarttime != ''">
+                and amStartTime = #{amstarttime}
+            </if>
+            <if test="amendtime != null and amendtime != ''">
+                and amEndTime = #{amendtime}
+            </if>
+            <if test="pmstarttime != null and pmstarttime != ''">
+                and pmStartTime = #{pmstarttime}
+            </if>
+            <if test="pmendtime != null and pmendtime != ''">
+                and pmEndTime = #{pmendtime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from doctor
+        <where>
+            <if test="doctorid != null">
+                and doctorId = #{doctorid}
+            </if>
+            <if test="doctorname != null and doctorname != ''">
+                and doctorName = #{doctorname}
+            </if>
+            <if test="departmentid != null">
+                and departmentId = #{departmentid}
+            </if>
+            <if test="registeredid != null">
+                and registeredId = #{registeredid}
+            </if>
+            <if test="dstate != null">
+                and dstate = #{dstate}
+            </if>
+            <if test="amstarttime != null and amstarttime != ''">
+                and amStartTime = #{amstarttime}
+            </if>
+            <if test="amendtime != null and amendtime != ''">
+                and amEndTime = #{amendtime}
+            </if>
+            <if test="pmstarttime != null and pmstarttime != ''">
+                and pmStartTime = #{pmstarttime}
+            </if>
+            <if test="pmendtime != null and pmendtime != ''">
+                and pmEndTime = #{pmendtime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="doctorid" useGeneratedKeys="true">
+        insert into doctor(doctorName, departmentId, registeredId, dstate, amStartTime, amEndTime, pmStartTime, pmEndTime)
+        values (#{doctorname}, #{departmentid}, #{registeredid}, #{dstate}, #{amstarttime}, #{amendtime}, #{pmstarttime}, #{pmendtime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="doctorid" useGeneratedKeys="true">
+        insert into doctor(doctorName, departmentId, registeredId, dstate, amStartTime, amEndTime, pmStartTime, pmEndTime)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.doctorname}, #{entity.departmentid}, #{entity.registeredid}, #{entity.dstate}, #{entity.amstarttime}, #{entity.amendtime}, #{entity.pmstarttime}, #{entity.pmendtime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="doctorid" useGeneratedKeys="true">
+        insert into doctor(doctorName, departmentId, registeredId, dstate, amStartTime, amEndTime, pmStartTime, pmEndTime)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.doctorname}, #{entity.departmentid}, #{entity.registeredid}, #{entity.dstate}, #{entity.amstarttime}, #{entity.amendtime}, #{entity.pmstarttime}, #{entity.pmendtime})
+        </foreach>
+        on duplicate key update
+        doctorName = values(doctorName),
+        departmentId = values(departmentId),
+        registeredId = values(registeredId),
+        dstate = values(dstate),
+        amStartTime = values(amStartTime),
+        amEndTime = values(amEndTime),
+        pmStartTime = values(pmStartTime),
+        pmEndTime = values(pmEndTime)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update doctor
+        <set>
+            <if test="doctorname != null and doctorname != ''">
+                doctorName = #{doctorname},
+            </if>
+            <if test="departmentid != null">
+                departmentId = #{departmentid},
+            </if>
+            <if test="registeredid != null">
+                registeredId = #{registeredid},
+            </if>
+            <if test="dstate != null">
+                dstate = #{dstate},
+            </if>
+            <if test="amstarttime != null and amstarttime != ''">
+                amStartTime = #{amstarttime},
+            </if>
+            <if test="amendtime != null and amendtime != ''">
+                amEndTime = #{amendtime},
+            </if>
+            <if test="pmstarttime != null and pmstarttime != ''">
+                pmStartTime = #{pmstarttime},
+            </if>
+            <if test="pmendtime != null and pmendtime != ''">
+                pmEndTime = #{pmendtime},
+            </if>
+        </set>
+        where doctorId = #{doctorid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from doctor where doctorId = #{doctorid}
+    </delete>
+
+</mapper>
+

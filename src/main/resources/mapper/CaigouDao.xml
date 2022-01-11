@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.CaigouDao">
+
+    <resultMap type="com.aaa.entity.Caigou" id="CaigouMap">
+        <result property="caigouid" column="caigouid" jdbcType="INTEGER"/>
+        <result property="caigouname" column="caigouname" jdbcType="VARCHAR"/>
+        <result property="gonghuoshang" column="gonghuoshang" jdbcType="VARCHAR"/>
+        <result property="danwei" column="danwei" jdbcType="VARCHAR"/>
+        <result property="candi" column="candi" jdbcType="VARCHAR"/>
+        <result property="leixing" column="leixing" jdbcType="VARCHAR"/>
+        <result property="shuliang" column="shuliang" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="CaigouMap">
+        select
+          caigouid, caigouname, gonghuoshang, danwei, candi, leixing, shuliang
+        from caigou
+        where caigouid = #{caigouid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="CaigouMap">
+        select
+          caigouid, caigouname, gonghuoshang, danwei, candi, leixing, shuliang
+        from caigou
+        <where>
+            <if test="caigouid != null">
+                and caigouid = #{caigouid}
+            </if>
+            <if test="caigouname != null and caigouname != ''">
+                and caigouname = #{caigouname}
+            </if>
+            <if test="gonghuoshang != null and gonghuoshang != ''">
+                and gonghuoshang = #{gonghuoshang}
+            </if>
+            <if test="danwei != null and danwei != ''">
+                and danwei = #{danwei}
+            </if>
+            <if test="candi != null and candi != ''">
+                and candi = #{candi}
+            </if>
+            <if test="leixing != null and leixing != ''">
+                and leixing = #{leixing}
+            </if>
+            <if test="shuliang != null">
+                and shuliang = #{shuliang}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from caigou
+        <where>
+            <if test="caigouid != null">
+                and caigouid = #{caigouid}
+            </if>
+            <if test="caigouname != null and caigouname != ''">
+                and caigouname = #{caigouname}
+            </if>
+            <if test="gonghuoshang != null and gonghuoshang != ''">
+                and gonghuoshang = #{gonghuoshang}
+            </if>
+            <if test="danwei != null and danwei != ''">
+                and danwei = #{danwei}
+            </if>
+            <if test="candi != null and candi != ''">
+                and candi = #{candi}
+            </if>
+            <if test="leixing != null and leixing != ''">
+                and leixing = #{leixing}
+            </if>
+            <if test="shuliang != null">
+                and shuliang = #{shuliang}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="caigouid" useGeneratedKeys="true">
+        insert into caigou(caigouname, gonghuoshang, danwei, candi, leixing, shuliang)
+        values (#{caigouname}, #{gonghuoshang}, #{danwei}, #{candi}, #{leixing}, #{shuliang})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="caigouid" useGeneratedKeys="true">
+        insert into caigou(caigouname, gonghuoshang, danwei, candi, leixing, shuliang)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.caigouname}, #{entity.gonghuoshang}, #{entity.danwei}, #{entity.candi}, #{entity.leixing}, #{entity.shuliang})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="caigouid" useGeneratedKeys="true">
+        insert into caigou(caigouname, gonghuoshang, danwei, candi, leixing, shuliang)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.caigouname}, #{entity.gonghuoshang}, #{entity.danwei}, #{entity.candi}, #{entity.leixing}, #{entity.shuliang})
+        </foreach>
+        on duplicate key update
+        caigouname = values(caigouname),
+        gonghuoshang = values(gonghuoshang),
+        danwei = values(danwei),
+        candi = values(candi),
+        leixing = values(leixing),
+        shuliang = values(shuliang)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update caigou
+        <set>
+            <if test="caigouname != null and caigouname != ''">
+                caigouname = #{caigouname},
+            </if>
+            <if test="gonghuoshang != null and gonghuoshang != ''">
+                gonghuoshang = #{gonghuoshang},
+            </if>
+            <if test="danwei != null and danwei != ''">
+                danwei = #{danwei},
+            </if>
+            <if test="candi != null and candi != ''">
+                candi = #{candi},
+            </if>
+            <if test="leixing != null and leixing != ''">
+                leixing = #{leixing},
+            </if>
+            <if test="shuliang != null">
+                shuliang = #{shuliang},
+            </if>
+        </set>
+        where caigouid = #{caigouid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from caigou where caigouid = #{caigouid}
+    </delete>
+
+</mapper>
+
