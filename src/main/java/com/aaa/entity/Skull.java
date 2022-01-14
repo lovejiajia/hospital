@@ -3,34 +3,14 @@ package com.aaa.entity;
 import java.io.Serializable;
 
 /**
- * (Skull)经办人实体类
+ * (Skull)经办人
  *
  * @author makejava
- * @since 2022-01-10 17:47:12
+ * @since 2022-01-14 14:58:25
  */
-public class Skull implements Serializable {
-    private static final long serialVersionUID = 313534580530015617L;
-    //序号
+public class Skull {
     private Integer skullid;
-    //经办人
     private String skullname;
-
-
-    public Integer getSkullid() {
-        return skullid;
-    }
-
-    public void setSkullid(Integer skullid) {
-        this.skullid = skullid;
-    }
-
-    public String getSkullname() {
-        return skullname;
-    }
-
-    public void setSkullname(String skullname) {
-        this.skullname = skullname;
-    }
 
 }
 

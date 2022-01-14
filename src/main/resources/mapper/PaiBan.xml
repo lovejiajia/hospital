@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.PaibanDao">
+
+    <!--
+    int add(PaibanDao paiban);
+    int count(int doctorId);
+    int update(PaibanDao paiban);
+    List queueList();.
+    -->
+    <resultMap type="com.aaa.entity.PaiBan" id="PaibanMap">
+        <result property="paiId" column="paiId" jdbcType="INTEGER"/>
+        <result property="one" column="one" jdbcType="VARCHAR"/>
+        <result property="two" column="two" jdbcType="VARCHAR"/>
+        <result property="three" column="three" jdbcType="VARCHAR"/>
+        <result property="four" column="four" jdbcType="VARCHAR"/>
+        <result property="five" column="five" jdbcType="VARCHAR"/>
+        <result property="six" column="six" jdbcType="VARCHAR"/>
+        <result property="seven" column="seven" jdbcType="VARCHAR"/>
+        <association property="doctor" javaType="com.aaa.entity.Doctor">
+            <result property="doctorId" column="doctorId" jdbcType="INTEGER"/>
+            <result property="doctorName" column="doctorName" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+    <insert id="add" keyProperty="paiId" useGeneratedKeys="true">
+        insert into paiban(one,two,three,four,five,six,seven,doctorId) values (#{one},#{two},#{three},#{four},#{five},#{seven},#{doctorId})
+    </insert>
+    <select id="count">
+        select count(1) from paiban where doctorId = #{doctorId}
+    </select>
+    <update id="update">
+        update paiban set ont = #{one} , two =  #{two}, three =  #{three}, four =  #{four}, five =  #{five} , six =  #{six}, seven} =  #{seven} where doctorId = #{doctorId}
+    </update>
+    <select id="queueList" resultMap="PaibanMap">
+        select p.one, p.two, p.three, p.four, p.five, p.six, p.seven, d.doctorName, d.doctorId from paiban p LEFT JOIN doctor d ON p.doctorId = d.doctorId
+    </select>
+
+
+</mapper>

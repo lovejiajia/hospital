@@ -7,18 +7,13 @@ import org.springframework.data.domain.PageRequest;
 import java.util.List;
 
 /**
- * (Area)地区的增删改查
+ * (Area)表服务接口
  *
  * @author makejava
- * @since 2022-01-10 17:47:07
+ * @since 2022-01-12 13:29:10
  */
 public interface AreaService {
-
-    Area queryById(Integer areaid);
-    List<Area> queryList(Area area);
-    int insert(Area area);
-    int update(Area area);
-    int deleteById(Integer areaid);
-
-
+    int addArea(Area area);
+    int deleteArea(int id);
+    List<Area> queueListArea();
 }

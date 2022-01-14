@@ -11,118 +11,20 @@
         <result property="phone" column="phone" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <!--查询单个-->
-    <select id="queryById" resultMap="HomeMap">
+    <!--
+      int addHome(Home home);
+    List<Home> selectHome();查询单个-->
+    <select id="selectHome" resultMap="HomeMap">
         select
           homeId, homeName, sex, age, carId, phone
         from home
-        where homeId = #{homeid}
-    </select>
-
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="HomeMap">
-        select
-          homeId, homeName, sex, age, carId, phone
-        from home
-        <where>
-            <if test="homeid != null">
-                and homeId = #{homeid}
-            </if>
-            <if test="homename != null and homename != ''">
-                and homeName = #{homename}
-            </if>
-            <if test="sex != null and sex != ''">
-                and sex = #{sex}
-            </if>
-            <if test="age != null">
-                and age = #{age}
-            </if>
-            <if test="carid != null and carid != ''">
-                and carId = #{carid}
-            </if>
-            <if test="phone != null and phone != ''">
-                and phone = #{phone}
-            </if>
-        </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
-    </select>
-
-    <!--统计总行数-->
-    <select id="count" resultType="java.lang.Long">
-        select count(1)
-        from home
-        <where>
-            <if test="homeid != null">
-                and homeId = #{homeid}
-            </if>
-            <if test="homename != null and homename != ''">
-                and homeName = #{homename}
-            </if>
-            <if test="sex != null and sex != ''">
-                and sex = #{sex}
-            </if>
-            <if test="age != null">
-                and age = #{age}
-            </if>
-            <if test="carid != null and carid != ''">
-                and carId = #{carid}
-            </if>
-            <if test="phone != null and phone != ''">
-                and phone = #{phone}
-            </if>
-        </where>
     </select>
 
     <!--新增所有列-->
-    <insert id="insert" keyProperty="homeid" useGeneratedKeys="true">
+    <insert id="addHome" keyProperty="homeid" useGeneratedKeys="true">
         insert into home(homeName, sex, age, carId, phone)
         values (#{homename}, #{sex}, #{age}, #{carid}, #{phone})
     </insert>
-
-    <insert id="insertBatch" keyProperty="homeid" useGeneratedKeys="true">
-        insert into home(homeName, sex, age, carId, phone)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-        (#{entity.homename}, #{entity.sex}, #{entity.age}, #{entity.carid}, #{entity.phone})
-        </foreach>
-    </insert>
-
-    <insert id="insertOrUpdateBatch" keyProperty="homeid" useGeneratedKeys="true">
-        insert into home(homeName, sex, age, carId, phone)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-            (#{entity.homename}, #{entity.sex}, #{entity.age}, #{entity.carid}, #{entity.phone})
-        </foreach>
-        on duplicate key update
-        homeName = values(homeName),
-        sex = values(sex),
-        age = values(age),
-        carId = values(carId),
-        phone = values(phone)
-    </insert>
-
-    <!--通过主键修改数据-->
-    <update id="update">
-        update home
-        <set>
-            <if test="homename != null and homename != ''">
-                homeName = #{homename},
-            </if>
-            <if test="sex != null and sex != ''">
-                sex = #{sex},
-            </if>
-            <if test="age != null">
-                age = #{age},
-            </if>
-            <if test="carid != null and carid != ''">
-                carId = #{carid},
-            </if>
-            <if test="phone != null and phone != ''">
-                phone = #{phone},
-            </if>
-        </set>
-        where homeId = #{homeid}
-    </update>
 
     <!--通过主键删除-->
     <delete id="deleteById">

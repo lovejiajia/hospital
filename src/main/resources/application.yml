@@ -28,3 +28,10 @@ pagehelper:
   reasonable: true
   support-methods-arguments: true
   page-size-zero: true
+
+
+logging:
+  level:
+    com:
+      aaa:
+        dao: debug

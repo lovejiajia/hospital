@@ -1,50 +1,35 @@
 package com.aaa.service.impl;
 
-import com.aaa.service.PaibanService;
+
 import com.aaa.dao.PaibanDao;
-import com.aaa.entity.Paiban;
+import com.aaa.entity.PaiBan;
+import com.aaa.service.PaibanService;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
 import java.util.List;
 
-/**
- * (Paiban)表服务实现类
- *
- * @author makejava
- * @since 2022-01-10 17:47:11
- */
 @Service("paibanService")
 public class PaibanServiceImpl implements PaibanService {
     @Resource
     private PaibanDao paibanDao;
-
-
     @Override
-    public List<Paiban> findAllPaiban() {
-        return paibanDao.findAllPaiban();
+    public int add(PaiBan paiban) {
+        return paibanDao.add(paiban);
     }
 
     @Override
-    public int insertPaiban(Paiban paiban) {
-        return paibanDao.insertPaiban(paiban);
+    public int count(int doctorId) {
+        return paibanDao.count(doctorId);
     }
 
     @Override
-    public int countPaiban(int id) {
-        return paibanDao.countPaiban(id);
+    public int update(PaiBan paiban) {
+        return paibanDao.update(paiban);
     }
 
     @Override
-    public int updatePaiban(Paiban paiban) {
-        return paibanDao.updatePaiban(paiban);
-    }
-
-    @Override
-    public int delectPaiban(int id) {
-        return paibanDao.delectPaiban(id);
+    public List<PaiBan> queueList() {
+        return paibanDao.queueList();
     }
 }

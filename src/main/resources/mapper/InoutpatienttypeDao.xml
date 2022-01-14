@@ -5,113 +5,32 @@
     <resultMap type="com.aaa.entity.Inoutpatienttype" id="InoutpatienttypeMap">
         <result property="inoutpatientid" column="inoutpatientId" jdbcType="INTEGER"/>
         <result property="projectname" column="projectName" jdbcType="VARCHAR"/>
-        <result property="unit" column="unit" jdbcType="INTEGER"/>
-        <result property="bigprojectid" column="bigproJectId" jdbcType="INTEGER"/>
-        <result property="price" column="price" jdbcType="VARCHAR"/>
+        <result property="price" column="price" jdbcType="NUMERIC"/>
+        <association property="unit" javaType="com.aaa.entity.Unit">
+            <result property="unitname" column="unitName" jdbcType="VARCHAR"/>
+        </association>
+        <association property="bigprojectid" javaType="com.aaa.entity.Projecttype">
+            <result property="projectid" column="projectId" jdbcType="INTEGER"/>
+            <result property="projectname" column="projectName" jdbcType="VARCHAR"/>
+        </association>
     </resultMap>
 
-    <!--查询单个-->
-    <select id="queryById" resultMap="InoutpatienttypeMap">
+    <!--
+        int add(Inoutpatienttype inoutpatienttype);
+    List<Inoutpatienttype> select(String name);查询单个-->
+    <select id="select" resultMap="InoutpatienttypeMap">
         select
-          inoutpatientId, projectName, unit, bigproJectId, price
-        from inoutpatienttype
+          inoutpatientId, projectName, u.unitName, p.projectName, price
+        from inoutpatienttype,unit u,projecttype p
         where inoutpatientId = #{inoutpatientid}
     </select>
 
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="InoutpatienttypeMap">
-        select
-          inoutpatientId, projectName, unit, bigproJectId, price
-        from inoutpatienttype
-        <where>
-            <if test="inoutpatientid != null">
-                and inoutpatientId = #{inoutpatientid}
-            </if>
-            <if test="projectname != null and projectname != ''">
-                and projectName = #{projectname}
-            </if>
-            <if test="unit != null">
-                and unit = #{unit}
-            </if>
-            <if test="bigprojectid != null">
-                and bigproJectId = #{bigprojectid}
-            </if>
-            <if test="price != null">
-                and price = #{price}
-            </if>
-        </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
-    </select>
-
-    <!--统计总行数-->
-    <select id="count" resultType="java.lang.Long">
-        select count(1)
-        from inoutpatienttype
-        <where>
-            <if test="inoutpatientid != null">
-                and inoutpatientId = #{inoutpatientid}
-            </if>
-            <if test="projectname != null and projectname != ''">
-                and projectName = #{projectname}
-            </if>
-            <if test="unit != null">
-                and unit = #{unit}
-            </if>
-            <if test="bigprojectid != null">
-                and bigproJectId = #{bigprojectid}
-            </if>
-            <if test="price != null">
-                and price = #{price}
-            </if>
-        </where>
-    </select>
-
     <!--新增所有列-->
-    <insert id="insert" keyProperty="inoutpatientid" useGeneratedKeys="true">
+    <insert id="add" keyProperty="inoutpatientid" useGeneratedKeys="true">
         insert into inoutpatienttype(projectName, unit, bigproJectId, price)
         values (#{projectname}, #{unit}, #{bigprojectid}, #{price})
     </insert>
 
-    <insert id="insertBatch" keyProperty="inoutpatientid" useGeneratedKeys="true">
-        insert into inoutpatienttype(projectName, unit, bigproJectId, price)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-        (#{entity.projectname}, #{entity.unit}, #{entity.bigprojectid}, #{entity.price})
-        </foreach>
-    </insert>
-
-    <insert id="insertOrUpdateBatch" keyProperty="inoutpatientid" useGeneratedKeys="true">
-        insert into inoutpatienttype(projectName, unit, bigproJectId, price)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-            (#{entity.projectname}, #{entity.unit}, #{entity.bigprojectid}, #{entity.price})
-        </foreach>
-        on duplicate key update
-        projectName = values(projectName),
-        unit = values(unit),
-        bigproJectId = values(bigproJectId),
-        price = values(price)
-    </insert>
-
-    <!--通过主键修改数据-->
-    <update id="update">
-        update inoutpatienttype
-        <set>
-            <if test="projectname != null and projectname != ''">
-                projectName = #{projectname},
-            </if>
-            <if test="unit != null">
-                unit = #{unit},
-            </if>
-            <if test="bigprojectid != null">
-                bigproJectId = #{bigprojectid},
-            </if>
-            <if test="price != null">
-                price = #{price},
-            </if>
-        </set>
-        where inoutpatientId = #{inoutpatientid}
-    </update>
 
     <!--通过主键删除-->
     <delete id="deleteById">

@@ -1,17 +1,11 @@
 package com.aaa.dao;
 
 import com.aaa.entity.SysUser;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
-import java.util.List;
 
 /**
- * (SysUser)表数据库访问层
- *
- * @author makejava
- * @since 2022-01-10 17:47:13
+ * 系统人员登录表
  */
 public interface SysUserDao {
-    SysUser queryByname(String username);
+    SysUser queueByIdForLogin(String loginName);//系统管理
+    int addSysUser(SysUser user);
 }
-

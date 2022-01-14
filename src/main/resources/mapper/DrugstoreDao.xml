@@ -5,217 +5,51 @@
     <resultMap type="com.aaa.entity.Drugstore" id="DrugstoreMap">
         <result property="rugstoreid" column="rugstoreId" jdbcType="INTEGER"/>
         <result property="drugstorename" column="drugstoreName" jdbcType="VARCHAR"/>
-        <result property="supplierid" column="supplierId" jdbcType="INTEGER"/>
-        <result property="skullid" column="skullId" jdbcType="INTEGER"/>
-        <result property="warehouseid" column="warehouseId" jdbcType="INTEGER"/>
-        <result property="unit" column="unit" jdbcType="INTEGER"/>
-        <result property="tradeprice" column="tradePrice" jdbcType="VARCHAR"/>
-        <result property="sellingprice" column="sellingPrice" jdbcType="VARCHAR"/>
-        <result property="area" column="area" jdbcType="INTEGER"/>
-        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="tradeprice" column="tradePrice" jdbcType="NUMERIC"/>
+        <result property="sellingprice" column="sellingPrice" jdbcType="NUMERIC"/>
         <result property="producedate" column="produceDate" jdbcType="TIMESTAMP"/>
         <result property="validdate" column="validDate" jdbcType="TIMESTAMP"/>
         <result property="drugstorenum" column="drugstorenum" jdbcType="INTEGER"/>
         <result property="batch" column="batch" jdbcType="VARCHAR"/>
+        <association property="supplierid" javaType="com.aaa.entity.Upplier">
+            <result property="suppliername" column="supplierName" jdbcType="VARCHAR"/>
+        </association>
+        <association property="skullid" javaType="com.aaa.entity.Skull">
+            <result property="skullname" column="skullName" jdbcType="VARCHAR"/>
+        </association>
+        <association property="warehouseid" javaType="com.aaa.entity.Warehuose">
+            <result property="warehouseid" column="warehouseId" jdbcType="INTEGER"/>
+        </association>
+        <association property="unit" javaType="com.aaa.entity.Unit">
+            <result property="unitname" column="unitName" jdbcType="VARCHAR"/>
+        </association>
+        <association property="area" javaType="com.aaa.entity.Area">
+            <result property="areaName" column="areaName" jdbcType="VARCHAR"/>
+        </association>
+        <association property="type" javaType="com.aaa.entity.Type">
+            <result property="typename" column="typeName" jdbcType="VARCHAR"/>
+        </association>
     </resultMap>
 
-    <!--查询单个-->
-    <select id="queryById" resultMap="DrugstoreMap">
+    <!--
+     int selectDrugsrore(String name);
+    int addDrugsrore(Drugstore drugstore);查询单个-->
+    <select id="selectDrugsrore" resultMap="DrugstoreMap">
         select
-          rugstoreId, drugstoreName, supplierId, skullId, warehouseId, unit, tradePrice, sellingPrice, area, type, produceDate, validDate, drugstorenum, batch
-        from drugstore
-        where rugstoreId = #{rugstoreid}
+          rugstoreId, drugstoreName, u.supplierName, s.skullName, w.warehouseId, un.unitName, tradePrice, sellingPrice, a.areaName, t.typeName, produceDate, validDate, drugstorenum, batch
+        from drugstore LEFT JOIN upplier u,skull s,warehouse w,unit un,area a,type t
+        where supplierId = u.supplierId and skullId = s.skullId and warehouseId = warehouseId and unitId = unit and area = areaId and type = typeId
+        <if test="name != null">
+            and drugstoreName like count('%',count(#{name}, '%'))
+        </if>
     </select>
 
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="DrugstoreMap">
-        select
-          rugstoreId, drugstoreName, supplierId, skullId, warehouseId, unit, tradePrice, sellingPrice, area, type, produceDate, validDate, drugstorenum, batch
-        from drugstore
-        <where>
-            <if test="rugstoreid != null">
-                and rugstoreId = #{rugstoreid}
-            </if>
-            <if test="drugstorename != null and drugstorename != ''">
-                and drugstoreName = #{drugstorename}
-            </if>
-            <if test="supplierid != null">
-                and supplierId = #{supplierid}
-            </if>
-            <if test="skullid != null">
-                and skullId = #{skullid}
-            </if>
-            <if test="warehouseid != null">
-                and warehouseId = #{warehouseid}
-            </if>
-            <if test="unit != null">
-                and unit = #{unit}
-            </if>
-            <if test="tradeprice != null">
-                and tradePrice = #{tradeprice}
-            </if>
-            <if test="sellingprice != null">
-                and sellingPrice = #{sellingprice}
-            </if>
-            <if test="area != null">
-                and area = #{area}
-            </if>
-            <if test="type != null">
-                and type = #{type}
-            </if>
-            <if test="producedate != null">
-                and produceDate = #{producedate}
-            </if>
-            <if test="validdate != null">
-                and validDate = #{validdate}
-            </if>
-            <if test="drugstorenum != null">
-                and drugstorenum = #{drugstorenum}
-            </if>
-            <if test="batch != null and batch != ''">
-                and batch = #{batch}
-            </if>
-        </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
-    </select>
-
-    <!--统计总行数-->
-    <select id="count" resultType="java.lang.Long">
-        select count(1)
-        from drugstore
-        <where>
-            <if test="rugstoreid != null">
-                and rugstoreId = #{rugstoreid}
-            </if>
-            <if test="drugstorename != null and drugstorename != ''">
-                and drugstoreName = #{drugstorename}
-            </if>
-            <if test="supplierid != null">
-                and supplierId = #{supplierid}
-            </if>
-            <if test="skullid != null">
-                and skullId = #{skullid}
-            </if>
-            <if test="warehouseid != null">
-                and warehouseId = #{warehouseid}
-            </if>
-            <if test="unit != null">
-                and unit = #{unit}
-            </if>
-            <if test="tradeprice != null">
-                and tradePrice = #{tradeprice}
-            </if>
-            <if test="sellingprice != null">
-                and sellingPrice = #{sellingprice}
-            </if>
-            <if test="area != null">
-                and area = #{area}
-            </if>
-            <if test="type != null">
-                and type = #{type}
-            </if>
-            <if test="producedate != null">
-                and produceDate = #{producedate}
-            </if>
-            <if test="validdate != null">
-                and validDate = #{validdate}
-            </if>
-            <if test="drugstorenum != null">
-                and drugstorenum = #{drugstorenum}
-            </if>
-            <if test="batch != null and batch != ''">
-                and batch = #{batch}
-            </if>
-        </where>
-    </select>
 
     <!--新增所有列-->
-    <insert id="insert" keyProperty="rugstoreid" useGeneratedKeys="true">
+    <insert id="addDrugsrore" keyProperty="rugstoreid" useGeneratedKeys="true">
         insert into drugstore(drugstoreName, supplierId, skullId, warehouseId, unit, tradePrice, sellingPrice, area, type, produceDate, validDate, drugstorenum, batch)
         values (#{drugstorename}, #{supplierid}, #{skullid}, #{warehouseid}, #{unit}, #{tradeprice}, #{sellingprice}, #{area}, #{type}, #{producedate}, #{validdate}, #{drugstorenum}, #{batch})
     </insert>
-
-    <insert id="insertBatch" keyProperty="rugstoreid" useGeneratedKeys="true">
-        insert into drugstore(drugstoreName, supplierId, skullId, warehouseId, unit, tradePrice, sellingPrice, area, type, produceDate, validDate, drugstorenum, batch)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-        (#{entity.drugstorename}, #{entity.supplierid}, #{entity.skullid}, #{entity.warehouseid}, #{entity.unit}, #{entity.tradeprice}, #{entity.sellingprice}, #{entity.area}, #{entity.type}, #{entity.producedate}, #{entity.validdate}, #{entity.drugstorenum}, #{entity.batch})
-        </foreach>
-    </insert>
-
-    <insert id="insertOrUpdateBatch" keyProperty="rugstoreid" useGeneratedKeys="true">
-        insert into drugstore(drugstoreName, supplierId, skullId, warehouseId, unit, tradePrice, sellingPrice, area, type, produceDate, validDate, drugstorenum, batch)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-            (#{entity.drugstorename}, #{entity.supplierid}, #{entity.skullid}, #{entity.warehouseid}, #{entity.unit}, #{entity.tradeprice}, #{entity.sellingprice}, #{entity.area}, #{entity.type}, #{entity.producedate}, #{entity.validdate}, #{entity.drugstorenum}, #{entity.batch})
-        </foreach>
-        on duplicate key update
-        drugstoreName = values(drugstoreName),
-        supplierId = values(supplierId),
-        skullId = values(skullId),
-        warehouseId = values(warehouseId),
-        unit = values(unit),
-        tradePrice = values(tradePrice),
-        sellingPrice = values(sellingPrice),
-        area = values(area),
-        type = values(type),
-        produceDate = values(produceDate),
-        validDate = values(validDate),
-        drugstorenum = values(drugstorenum),
-        batch = values(batch)
-    </insert>
-
-    <!--通过主键修改数据-->
-    <update id="update">
-        update drugstore
-        <set>
-            <if test="drugstorename != null and drugstorename != ''">
-                drugstoreName = #{drugstorename},
-            </if>
-            <if test="supplierid != null">
-                supplierId = #{supplierid},
-            </if>
-            <if test="skullid != null">
-                skullId = #{skullid},
-            </if>
-            <if test="warehouseid != null">
-                warehouseId = #{warehouseid},
-            </if>
-            <if test="unit != null">
-                unit = #{unit},
-            </if>
-            <if test="tradeprice != null">
-                tradePrice = #{tradeprice},
-            </if>
-            <if test="sellingprice != null">
-                sellingPrice = #{sellingprice},
-            </if>
-            <if test="area != null">
-                area = #{area},
-            </if>
-            <if test="type != null">
-                type = #{type},
-            </if>
-            <if test="producedate != null">
-                produceDate = #{producedate},
-            </if>
-            <if test="validdate != null">
-                validDate = #{validdate},
-            </if>
-            <if test="drugstorenum != null">
-                drugstorenum = #{drugstorenum},
-            </if>
-            <if test="batch != null and batch != ''">
-                batch = #{batch},
-            </if>
-        </set>
-        where rugstoreId = #{rugstoreid}
-    </update>
-
-    <!--通过主键删除-->
-    <delete id="deleteById">
-        delete from drugstore where rugstoreId = #{rugstoreid}
-    </delete>
 
 </mapper>
 

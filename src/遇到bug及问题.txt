@@ -1,0 +1,28 @@
+1.PageHelperAutoConfiguration依赖循环
+parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.5.6</version>
+        <relativePath/>
+</parent>
+版本改为2.5.6
+2.页面禁止访问
+Controller层加@RestController
+访问页面:
+错误：http://localhost/Paiban/findAllPaiban?page=1&limit=5
+正确：http://localhost:8080/Paiban/findAllPaiban?page=1&limit=5
+3.参数没有getter方法
+url地址没有参数，请求参数设置为null
+4.404访问
+Controller层加@RestController注解
+5.没有queueListRegister方法
+Service层加@Service("registerService")注解
+6.数据库表中没有字段
+        <association property="department" javaType="com.aaa.entity.Deparment">
+            <result property="name" column="department" jdbcType="VARCHAR"/>
+        </association>
+        <association property="doctor" javaType="com.aaa.entity.Doctor">
+            <result property="doctorName" column="doctorName" jdbcType="VARCHAR"/>
+        </association>
+association中  property(Register实体类中的属性名)        javaType(类名Deparment)
+result         property(Deparment实体类中属性名)         column(Deparment数据库表中属性名)

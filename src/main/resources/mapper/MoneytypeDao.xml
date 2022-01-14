@@ -8,73 +8,21 @@
         <result property="percent" column="Percent" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <!--查询单个-->
-    <select id="queryById" resultMap="MoneytypeMap">
+    <!--
+    int add(Moneytype moneytype);
+    List<Moneytype> select();
+    int update(String precent);查询单个-->
+    <select id="select" resultMap="MoneytypeMap">
         select
           MoneyId, Moneytype, Percent
         from moneytype
         where MoneyId = #{moneyid}
     </select>
 
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="MoneytypeMap">
-        select
-          MoneyId, Moneytype, Percent
-        from moneytype
-        <where>
-            <if test="moneyid != null">
-                and MoneyId = #{moneyid}
-            </if>
-            <if test="moneytype != null and moneytype != ''">
-                and Moneytype = #{moneytype}
-            </if>
-            <if test="percent != null and percent != ''">
-                and Percent = #{percent}
-            </if>
-        </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
-    </select>
-
-    <!--统计总行数-->
-    <select id="count" resultType="java.lang.Long">
-        select count(1)
-        from moneytype
-        <where>
-            <if test="moneyid != null">
-                and MoneyId = #{moneyid}
-            </if>
-            <if test="moneytype != null and moneytype != ''">
-                and Moneytype = #{moneytype}
-            </if>
-            <if test="percent != null and percent != ''">
-                and Percent = #{percent}
-            </if>
-        </where>
-    </select>
-
     <!--新增所有列-->
-    <insert id="insert" keyProperty="moneyid" useGeneratedKeys="true">
+    <insert id="add" keyProperty="moneyid" useGeneratedKeys="true">
         insert into moneytype(Moneytype, Percent)
         values (#{moneytype}, #{percent})
-    </insert>
-
-    <insert id="insertBatch" keyProperty="moneyid" useGeneratedKeys="true">
-        insert into moneytype(Moneytype, Percent)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-        (#{entity.moneytype}, #{entity.percent})
-        </foreach>
-    </insert>
-
-    <insert id="insertOrUpdateBatch" keyProperty="moneyid" useGeneratedKeys="true">
-        insert into moneytype(Moneytype, Percent)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-            (#{entity.moneytype}, #{entity.percent})
-        </foreach>
-        on duplicate key update
-        Moneytype = values(Moneytype),
-        Percent = values(Percent)
     </insert>
 
     <!--通过主键修改数据-->
@@ -85,7 +33,7 @@
                 Moneytype = #{moneytype},
             </if>
             <if test="percent != null and percent != ''">
-                Percent = #{percent},
+                Percent like conut('%',count(#{percent},'%')),
             </if>
         </set>
         where MoneyId = #{moneyid}

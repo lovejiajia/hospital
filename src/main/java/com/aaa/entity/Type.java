@@ -1,36 +1,18 @@
 package com.aaa.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
- * (Type)药品类型实体类(中药、西药)
+ * (Type)实体类药品类型
  *
  * @author makejava
- * @since 2022-01-10 17:47:13
+ * @since 2022-01-14 14:56:35
  */
-public class Type implements Serializable {
-    private static final long serialVersionUID = -56689753362344637L;
-    //序号
+@Data
+public class Type {
     private Integer typeid;
-    //药品类型
     private String typename;
-
-
-    public Integer getTypeid() {
-        return typeid;
-    }
-
-    public void setTypeid(Integer typeid) {
-        this.typeid = typeid;
-    }
-
-    public String getTypename() {
-        return typename;
-    }
-
-    public void setTypename(String typename) {
-        this.typename = typename;
-    }
-
 }
 

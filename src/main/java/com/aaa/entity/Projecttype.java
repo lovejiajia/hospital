@@ -3,34 +3,14 @@ package com.aaa.entity;
 import java.io.Serializable;
 
 /**
- * (Projecttype).项目类别实体类
+ * (Projecttype)医院分类
  *
  * @author makejava
- * @since 2022-01-10 17:47:12
+ * @since 2022-01-14 17:24:10
  */
-public class Projecttype implements Serializable {
-    private static final long serialVersionUID = 303568274956457700L;
-    //序号
+public class Projecttype {
     private Integer projectid;
-    //项目类别
     private String projectname;
-
-
-    public Integer getProjectid() {
-        return projectid;
-    }
-
-    public void setProjectid(Integer projectid) {
-        this.projectid = projectid;
-    }
-
-    public String getProjectname() {
-        return projectname;
-    }
-
-    public void setProjectname(String projectname) {
-        this.projectname = projectname;
-    }
 
 }
 

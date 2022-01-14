@@ -18,11 +18,22 @@
     </resultMap>
 
     <!--查询单个-->
-    <select id="queryByname" resultMap="SysUserMap">
-        select * from sys_user
-        where loginname=#{loginname} AND available=1
+    <select id="queueByIdForLogin" resultType="com.aaa.entity.SysUser">
+        select loginname, pwd, salt
+        from sys_user
+        where loginname = #{loginName}
     </select>
 
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from sys_user where userid = #{userid}
+    </delete>
+
+    <insert id="addSysUser" keyProperty="userid" useGeneratedKeys="true">
+        insert into sys_user(loginname,identity,realname,sex,address,phone,pwd,position,type,available,salt)
+        values(#{loginname},#{identity},#{realname},#{sex},#{address},#{phone},#{pwd},#{position},#{type},1,#{salt})
+    </insert>
 
 </mapper>
 

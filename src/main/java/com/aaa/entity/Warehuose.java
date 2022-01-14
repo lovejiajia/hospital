@@ -1,36 +1,19 @@
 package com.aaa.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
- * (Warehuose)库房实体类
+ * (WarehuoseDao)药房
  *
  * @author makejava
- * @since 2022-01-10 17:47:14
+ * @since 2022-01-14 15:03:29
  */
-public class Warehuose implements Serializable {
-    private static final long serialVersionUID = 910213562530077616L;
-    //序号
+@Data
+public class Warehuose {
     private Integer warehouseid;
-    //库房名
     private String suppliername;
-
-
-    public Integer getWarehouseid() {
-        return warehouseid;
-    }
-
-    public void setWarehouseid(Integer warehouseid) {
-        this.warehouseid = warehouseid;
-    }
-
-    public String getSuppliername() {
-        return suppliername;
-    }
-
-    public void setSuppliername(String suppliername) {
-        this.suppliername = suppliername;
-    }
 
 }
 

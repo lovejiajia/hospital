@@ -4,152 +4,31 @@
 
     <resultMap type="com.aaa.entity.Hospitalprice" id="HospitalpriceMap">
         <result property="hospitalpriceid" column="hospitalpriceid" jdbcType="INTEGER"/>
-        <result property="registerid" column="registerId" jdbcType="INTEGER"/>
         <result property="durgname" column="durgname" jdbcType="VARCHAR"/>
         <result property="durgnum" column="durgnum" jdbcType="INTEGER"/>
-        <result property="repiceprice" column="repiceprice" jdbcType="VARCHAR"/>
-        <result property="repicetotal" column="repicetotal" jdbcType="VARCHAR"/>
+        <result property="repiceprice" column="repiceprice" jdbcType="NUMERIC"/>
+        <result property="repicetotal" column="repicetotal" jdbcType="NUMERIC"/>
         <result property="htime" column="htime" jdbcType="TIMESTAMP"/>
         <result property="state" column="state" jdbcType="INTEGER"/>
+        <association property="registerid" javaType="com.aaa.entity.Register">
+            <result property="registerid" column="registerId" jdbcType="INTEGER"/>
+        </association>
     </resultMap>
 
+    <!--int add(Hospitalprice hospitalprice);
+    List<Hospitalprice> select(int id);-->
     <!--查询单个-->
-    <select id="queryById" resultMap="HospitalpriceMap">
+    <select id="select" resultMap="HospitalpriceMap">
         select
           hospitalpriceid, registerId, durgname, durgnum, repiceprice, repicetotal, htime, state
         from hospitalprice
-        where hospitalpriceid = #{hospitalpriceid}
+        where registerId = #{id}
     </select>
-
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="HospitalpriceMap">
-        select
-          hospitalpriceid, registerId, durgname, durgnum, repiceprice, repicetotal, htime, state
-        from hospitalprice
-        <where>
-            <if test="hospitalpriceid != null">
-                and hospitalpriceid = #{hospitalpriceid}
-            </if>
-            <if test="registerid != null">
-                and registerId = #{registerid}
-            </if>
-            <if test="durgname != null and durgname != ''">
-                and durgname = #{durgname}
-            </if>
-            <if test="durgnum != null">
-                and durgnum = #{durgnum}
-            </if>
-            <if test="repiceprice != null">
-                and repiceprice = #{repiceprice}
-            </if>
-            <if test="repicetotal != null">
-                and repicetotal = #{repicetotal}
-            </if>
-            <if test="htime != null">
-                and htime = #{htime}
-            </if>
-            <if test="state != null">
-                and state = #{state}
-            </if>
-        </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
-    </select>
-
-    <!--统计总行数-->
-    <select id="count" resultType="java.lang.Long">
-        select count(1)
-        from hospitalprice
-        <where>
-            <if test="hospitalpriceid != null">
-                and hospitalpriceid = #{hospitalpriceid}
-            </if>
-            <if test="registerid != null">
-                and registerId = #{registerid}
-            </if>
-            <if test="durgname != null and durgname != ''">
-                and durgname = #{durgname}
-            </if>
-            <if test="durgnum != null">
-                and durgnum = #{durgnum}
-            </if>
-            <if test="repiceprice != null">
-                and repiceprice = #{repiceprice}
-            </if>
-            <if test="repicetotal != null">
-                and repicetotal = #{repicetotal}
-            </if>
-            <if test="htime != null">
-                and htime = #{htime}
-            </if>
-            <if test="state != null">
-                and state = #{state}
-            </if>
-        </where>
-    </select>
-
     <!--新增所有列-->
-    <insert id="insert" keyProperty="hospitalpriceid" useGeneratedKeys="true">
+    <insert id="add" keyProperty="hospitalpriceid" useGeneratedKeys="true">
         insert into hospitalprice(registerId, durgname, durgnum, repiceprice, repicetotal, htime, state)
-        values (#{registerid}, #{durgname}, #{durgnum}, #{repiceprice}, #{repicetotal}, #{htime}, #{state})
+        values (#{registerid}, #{durgname}, #{durgnum}, #{repiceprice}, #{repicetotal}, now(), #{state})
     </insert>
-
-    <insert id="insertBatch" keyProperty="hospitalpriceid" useGeneratedKeys="true">
-        insert into hospitalprice(registerId, durgname, durgnum, repiceprice, repicetotal, htime, state)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-        (#{entity.registerid}, #{entity.durgname}, #{entity.durgnum}, #{entity.repiceprice}, #{entity.repicetotal}, #{entity.htime}, #{entity.state})
-        </foreach>
-    </insert>
-
-    <insert id="insertOrUpdateBatch" keyProperty="hospitalpriceid" useGeneratedKeys="true">
-        insert into hospitalprice(registerId, durgname, durgnum, repiceprice, repicetotal, htime, state)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-            (#{entity.registerid}, #{entity.durgname}, #{entity.durgnum}, #{entity.repiceprice}, #{entity.repicetotal}, #{entity.htime}, #{entity.state})
-        </foreach>
-        on duplicate key update
-        registerId = values(registerId),
-        durgname = values(durgname),
-        durgnum = values(durgnum),
-        repiceprice = values(repiceprice),
-        repicetotal = values(repicetotal),
-        htime = values(htime),
-        state = values(state)
-    </insert>
-
-    <!--通过主键修改数据-->
-    <update id="update">
-        update hospitalprice
-        <set>
-            <if test="registerid != null">
-                registerId = #{registerid},
-            </if>
-            <if test="durgname != null and durgname != ''">
-                durgname = #{durgname},
-            </if>
-            <if test="durgnum != null">
-                durgnum = #{durgnum},
-            </if>
-            <if test="repiceprice != null">
-                repiceprice = #{repiceprice},
-            </if>
-            <if test="repicetotal != null">
-                repicetotal = #{repicetotal},
-            </if>
-            <if test="htime != null">
-                htime = #{htime},
-            </if>
-            <if test="state != null">
-                state = #{state},
-            </if>
-        </set>
-        where hospitalpriceid = #{hospitalpriceid}
-    </update>
-
-    <!--通过主键删除-->
-    <delete id="deleteById">
-        delete from hospitalprice where hospitalpriceid = #{hospitalpriceid}
-    </delete>
 
 </mapper>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.aaa.dao.UpplierDao">
+<mapper namespace=".dao.UpplierDao">
 
     <resultMap type="com.aaa.entity.Upplier" id="UpplierMap">
         <result property="supplierid" column="supplierId" jdbcType="INTEGER"/>
@@ -10,107 +10,35 @@
         <result property="state" column="state" jdbcType="INTEGER"/>
     </resultMap>
 
-    <!--查询单个-->
+    <!--
+        int addUpplier(Upplier upplier);
+    List<Upplier> select(int id, String name);
+    int update(int state);//更新供货商状态，停供查询单个-->
     <select id="queryById" resultMap="UpplierMap">
         select
-          supplierId, supplierName, supplierPhone, supplierAddress, state
+          supplierId, supplierName, supplierPhone, supplierAddress
         from upplier
-        where supplierId = #{supplierid}
-    </select>
-
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="UpplierMap">
-        select
-          supplierId, supplierName, supplierPhone, supplierAddress, state
-        from upplier
-        <where>
-            <if test="supplierid != null">
-                and supplierId = #{supplierid}
+       <where>
+            <if test="id != null">
+                and supplierId = #{id},
             </if>
-            <if test="suppliername != null and suppliername != ''">
-                and supplierName = #{suppliername}
+            <if test="name != null">
+                and supplierName = #{name},
             </if>
-            <if test="supplierphone != null and supplierphone != ''">
-                and supplierPhone = #{supplierphone}
-            </if>
-            <if test="supplieraddress != null and supplieraddress != ''">
-                and supplierAddress = #{supplieraddress}
-            </if>
-            <if test="state != null">
-                and state = #{state}
-            </if>
-        </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
-    </select>
-
-    <!--统计总行数-->
-    <select id="count" resultType="java.lang.Long">
-        select count(1)
-        from upplier
-        <where>
-            <if test="supplierid != null">
-                and supplierId = #{supplierid}
-            </if>
-            <if test="suppliername != null and suppliername != ''">
-                and supplierName = #{suppliername}
-            </if>
-            <if test="supplierphone != null and supplierphone != ''">
-                and supplierPhone = #{supplierphone}
-            </if>
-            <if test="supplieraddress != null and supplieraddress != ''">
-                and supplierAddress = #{supplieraddress}
-            </if>
-            <if test="state != null">
-                and state = #{state}
-            </if>
-        </where>
+                and state = 1
+       </where>
     </select>
 
     <!--新增所有列-->
-    <insert id="insert" keyProperty="supplierid" useGeneratedKeys="true">
+    <insert id="addUpplier" keyProperty="supplierid" useGeneratedKeys="true">
         insert into upplier(supplierName, supplierPhone, supplierAddress, state)
         values (#{suppliername}, #{supplierphone}, #{supplieraddress}, #{state})
     </insert>
 
-    <insert id="insertBatch" keyProperty="supplierid" useGeneratedKeys="true">
-        insert into upplier(supplierName, supplierPhone, supplierAddress, state)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-        (#{entity.suppliername}, #{entity.supplierphone}, #{entity.supplieraddress}, #{entity.state})
-        </foreach>
-    </insert>
-
-    <insert id="insertOrUpdateBatch" keyProperty="supplierid" useGeneratedKeys="true">
-        insert into upplier(supplierName, supplierPhone, supplierAddress, state)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-            (#{entity.suppliername}, #{entity.supplierphone}, #{entity.supplieraddress}, #{entity.state})
-        </foreach>
-        on duplicate key update
-        supplierName = values(supplierName),
-        supplierPhone = values(supplierPhone),
-        supplierAddress = values(supplierAddress),
-        state = values(state)
-    </insert>
-
     <!--通过主键修改数据-->
     <update id="update">
-        update upplier
-        <set>
-            <if test="suppliername != null and suppliername != ''">
-                supplierName = #{suppliername},
-            </if>
-            <if test="supplierphone != null and supplierphone != ''">
-                supplierPhone = #{supplierphone},
-            </if>
-            <if test="supplieraddress != null and supplieraddress != ''">
-                supplierAddress = #{supplieraddress},
-            </if>
-            <if test="state != null">
-                state = #{state},
-            </if>
-        </set>
-        where supplierId = #{supplierid}
+        update upplier set state = #{state}
+        where supplierId = #{id}
     </update>
 
     <!--通过主键删除-->

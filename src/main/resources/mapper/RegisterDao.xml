@@ -7,8 +7,6 @@
         <result property="username" column="userName" jdbcType="VARCHAR"/>
         <result property="age" column="age" jdbcType="INTEGER"/>
         <result property="sex" column="sex" jdbcType="VARCHAR"/>
-        <result property="department" column="department" jdbcType="INTEGER"/>
-        <result property="doctor" column="doctor" jdbcType="INTEGER"/>
         <result property="diagnose" column="diagnose" jdbcType="VARCHAR"/>
         <result property="address" column="address" jdbcType="VARCHAR"/>
         <result property="phone" column="Phone" jdbcType="VARCHAR"/>
@@ -16,39 +14,122 @@
         <result property="registerdate" column="registerDate" jdbcType="TIMESTAMP"/>
         <result property="bednum" column="bedNum" jdbcType="INTEGER"/>
         <result property="operator" column="Operator" jdbcType="VARCHAR"/>
-        <result property="money" column="money" jdbcType="VARCHAR"/>
+        <result property="money" column="money" jdbcType="NUMERIC"/>
         <result property="state" column="state" jdbcType="INTEGER"/>
         <result property="enddate" column="endDate" jdbcType="TIMESTAMP"/>
-        <result property="price" column="price" jdbcType="VARCHAR"/>
+        <result property="price" column="price" jdbcType="NUMERIC"/>
         <result property="discount" column="discount" jdbcType="VARCHAR"/>
         <result property="zhuan" column="zhuan" jdbcType="TIMESTAMP"/>
+        <association property="department" javaType="com.aaa.entity.Deparment">
+            <result property="name" column="department" jdbcType="VARCHAR"/>
+        </association>
+        <association property="doctor" javaType="com.aaa.entity.Doctor">
+            <result property="doctorId" column="doctorId" jdbcType="INTEGER"/>
+            <result property="doctorName" column="doctorName" jdbcType="VARCHAR"/>
+        </association>
     </resultMap>
 
 
-    <select id="queryByName" resultMap="RegisterMap">
-        select
-          r.registerid, r.userName, r.age, r.sex, d.department, do.doctorName, r.diagnose, r.address, r.Phone, r.Idcard, r.registerDate, r.bedNum, r.Operator, r.money, r.state, r.endDate, r.price, r.discount, r.zhuan
-        from register r , doctor do, departments d where r.department = d.departmentId and r.doctor = do.doctorId
-        and userName like concat('%' , #{userName , jdbcType = VARCHAR} , '%')
-    </select>
-
-    <select id="queueListRegister" resultMap="RegisterMap">
-        select
-            r.registerid, r.userName, r.age, r.sex, d.department, do.doctorName, r.diagnose, r.address, r.Phone, r.Idcard, r.registerDate, r.bedNum, r.Operator, r.money, r.state, r.endDate, r.price, r.discount, r.zhuan
-        from register r , doctor do, departments d where r.department = d.departmentId and r.doctor = do.doctorId
-    </select>
-
+    <!--
+     int add(Register register);
+    int delete(int id);
+    int update(Register register);
+    List<Register> queueListRegister();
+    List<Register> queueListRegisterByName(String name);
+    查询单个-->
     <!--新增所有列-->
-    <insert id="insert" keyProperty="registerid" useGeneratedKeys="true">
+    <insert id="add" keyProperty="registerid" useGeneratedKeys="true">
         insert into register(userName, age, sex, department, doctor, diagnose, address, Phone, Idcard, registerDate, bedNum, Operator, money, state, endDate, price, discount, zhuan)
-        values (#{username}, #{age}, #{sex}, #{department}, #{doctor}, #{diagnose}, #{address}, #{phone}, #{idcard}, #{registerdate}, #{bednum}, #{operator}, #{money}, #{state}, #{enddate}, #{price}, #{discount}, #{zhuan})
+        values (#{username}, #{age}, #{sex}, #{department.id}, #{doctor.doctorId}, #{diagnose}, #{address}, #{phone}, #{idcard}, #{registerdate}, #{bednum}, #{operator}, #{money}, #{state}, #{enddate}, #{price}, #{discount}, #{zhuan})
     </insert>
 
-
     <!--通过主键删除-->
-    <delete id="deleteById">
+    <delete id="delete">
         delete from register where registerid = #{registerid}
     </delete>
 
+    <!--通过主键修改数据-->
+    <update id="update">
+        update register
+        <set>
+            <if test="username != null and username != ''">
+                userName = #{username},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+            <if test="sex != null and sex != ''">
+                sex = #{sex},
+            </if>
+            <if test="department != null">
+                department = #{department.id},
+            </if>
+            <if test="doctor != null">
+                doctor = #{doctor.doctorId},
+            </if>
+            <if test="diagnose != null and diagnose != ''">
+                diagnose = #{diagnose},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+            <if test="phone != null and phone != ''">
+                Phone = #{phone},
+            </if>
+            <if test="idcard != null and idcard != ''">
+                Idcard = #{idcard},
+            </if>
+            <if test="registerdate != null">
+                registerDate = #{registerdate},
+            </if>
+            <if test="bednum != null">
+                bedNum = #{bednum},
+            </if>
+            <if test="operator != null and operator != ''">
+                Operator = #{operator},
+            </if>
+            <if test="money != null">
+                money = #{money},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="enddate != null">
+                endDate = #{enddate},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="discount != null and discount != ''">
+                discount = #{discount},
+            </if>
+        </set>
+        where registerid = #{registerid}
+    </update>
+
+    <select id="queueListRegister" resultMap="RegisterMap">
+        select
+        registerid, userName, age, sex, d.department, do.doctorName, address, Phone, Idcard, registerDate, bedNum,money,price
+        from register,departments d,doctor do
+        <where>
+            <if test="username != null" >
+                and userName like concat('%',concat(#{userName},'%')),
+            </if>
+            <if test="bedNum != null">
+                and bedNum = #{bednum},
+            </if>
+        </where>
+    </select>
+
+    <!--用户余额增加及已用金额增加-->
+    <update id="addPrice">
+        update register set price = price + #{price} where registerid = #{id}
+    </update>
+    <update id="addMoney">
+        update register set money = money + #{price} where registerid = #{id}
+    </update>
+    <update id="endDate">
+        update register set endDate = now() where registerid = #{id}
+    </update>
 </mapper>
 

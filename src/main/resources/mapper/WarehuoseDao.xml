@@ -7,78 +7,20 @@
         <result property="suppliername" column="supplierName" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <!--查询单个-->
-    <select id="queryById" resultMap="WarehuoseMap">
+    <!--
+    int addWarehuose(Warehuose warehuose);
+    List<Warehuose> select();查询单个-->
+    <select id="select" resultMap="WarehuoseMap">
         select
           warehouseId, supplierName
         from warehuose
-        where warehouseId = #{warehouseid}
-    </select>
-
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="WarehuoseMap">
-        select
-          warehouseId, supplierName
-        from warehuose
-        <where>
-            <if test="warehouseid != null">
-                and warehouseId = #{warehouseid}
-            </if>
-            <if test="suppliername != null and suppliername != ''">
-                and supplierName = #{suppliername}
-            </if>
-        </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
-    </select>
-
-    <!--统计总行数-->
-    <select id="count" resultType="java.lang.Long">
-        select count(1)
-        from warehuose
-        <where>
-            <if test="warehouseid != null">
-                and warehouseId = #{warehouseid}
-            </if>
-            <if test="suppliername != null and suppliername != ''">
-                and supplierName = #{suppliername}
-            </if>
-        </where>
     </select>
 
     <!--新增所有列-->
-    <insert id="insert" keyProperty="warehouseid" useGeneratedKeys="true">
+    <insert id="addWarehuose" keyProperty="warehouseid" useGeneratedKeys="true">
         insert into warehuose(supplierName)
         values (#{suppliername})
     </insert>
-
-    <insert id="insertBatch" keyProperty="warehouseid" useGeneratedKeys="true">
-        insert into warehuose(supplierName)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-        (#{entity.suppliername})
-        </foreach>
-    </insert>
-
-    <insert id="insertOrUpdateBatch" keyProperty="warehouseid" useGeneratedKeys="true">
-        insert into warehuose(supplierName)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-            (#{entity.suppliername})
-        </foreach>
-        on duplicate key update
-        supplierName = values(supplierName)
-    </insert>
-
-    <!--通过主键修改数据-->
-    <update id="update">
-        update warehuose
-        <set>
-            <if test="suppliername != null and suppliername != ''">
-                supplierName = #{suppliername},
-            </if>
-        </set>
-        where warehouseId = #{warehouseid}
-    </update>
 
     <!--通过主键删除-->
     <delete id="deleteById">

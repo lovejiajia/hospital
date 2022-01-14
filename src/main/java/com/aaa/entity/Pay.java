@@ -1,57 +1,21 @@
 package com.aaa.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 import java.io.Serializable;
 
 /**
- * (Pay)预交金实体类
+ * (Pay)病人支付详情
  *
  * @author makejava
- * @since 2022-01-10 17:47:11
+ * @since 2022-01-13 12:41:44
  */
-public class Pay implements Serializable {
-    private static final long serialVersionUID = 964961190361664824L;
-    //序号
+@Data
+public class Pay {
     private Integer payid;
-    //住院id
-    private Integer registerid;
-    //交款
-    private Object money;
-    //缴款日期
+    private Register registerid;
+    private Double money;
     private Date paydate;
-
-
-    public Integer getPayid() {
-        return payid;
-    }
-
-    public void setPayid(Integer payid) {
-        this.payid = payid;
-    }
-
-    public Integer getRegisterid() {
-        return registerid;
-    }
-
-    public void setRegisterid(Integer registerid) {
-        this.registerid = registerid;
-    }
-
-    public Object getMoney() {
-        return money;
-    }
-
-    public void setMoney(Object money) {
-        this.money = money;
-    }
-
-    public Date getPaydate() {
-        return paydate;
-    }
-
-    public void setPaydate(Date paydate) {
-        this.paydate = paydate;
-    }
-
 }
 
