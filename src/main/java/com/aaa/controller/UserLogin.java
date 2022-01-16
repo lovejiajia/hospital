@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 用户登录类
+ */
 @RestController
 @RequestMapping("sel")
 public class UserLogin {

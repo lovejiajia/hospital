@@ -10,4 +10,5 @@ import java.util.List;
 public interface WarehuoseDao {
     int addWarehuose(Warehuose warehuose);
     List<Warehuose> select();
+    int update();
 }

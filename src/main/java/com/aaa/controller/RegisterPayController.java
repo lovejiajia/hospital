@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 病人缴费及查询余额
+ * 住院病人缴费及查询余额
  */
 @RestController
 @RequestMapping("sel")

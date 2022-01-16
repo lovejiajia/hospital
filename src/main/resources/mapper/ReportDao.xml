@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.ReportDao">
+
+    <resultMap type="com.aaa.entity.Report" id="ReportMap">
+        <result property="reportid" column="reportId" jdbcType="INTEGER"/>
+        <result property="reportname" column="reportName" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" jdbcType="VARCHAR"/>
+        <result property="age" column="age" jdbcType="INTEGER"/>
+        <result property="price" column="price" jdbcType="NUMERIC"/>
+        <result property="time" column="time" jdbcType="TIMESTAMP"/>
+        <result property="users" column="users" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="carid" column="carid" jdbcType="VARCHAR"/>
+        <result property="zhuan" column="zhuan" jdbcType="VARCHAR"/>
+
+        <association property="reporttype" javaType="com.aaa.entity.Registeredtype">
+            <result property="registeredid" column="registeredId" jdbcType="INTEGER"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+            <result property="price" column="price" jdbcType="NUMERIC"/>
+        </association>
+
+        <association property="department" javaType="com.aaa.entity.Deparment">
+            <result property="departmentid" column="departmentId" jdbcType="INTEGER"/>
+            <result property="department" column="department" jdbcType="VARCHAR"/>
+        </association>
+        <association property="doctor" javaType="com.aaa.entity.Doctor">
+            <result property="doctorid" column="doctorId" jdbcType="INTEGER"/>
+            <result property="doctorname" column="doctorName" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+    <!--
+      int add(Report report);
+    List<Report> select(Date date);查询单个-->
+    <select id="select" resultMap="ReportMap">
+        select
+          reportId, reportName, sex, age, d.department, do.doctorName, r.type, price, time, users, state, phone, carid, zhuan
+        from report,departments d,doctor do,registeredtype r
+        where department = d.departmentId and doctor = do.doctorId and reportTpye = r.registeredId
+        <where>
+            <if test="reportid != null">
+                and reportId = #{reportid}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="add" keyProperty="reportid" useGeneratedKeys="true">
+        insert into report(reportName, sex, age, department, doctor, reportType, price, time, users, state, phone, carid, zhuan)
+        values (#{reportname}, #{sex}, #{age}, #{department}, #{doctor}, #{reporttype}, #{price}, now(), #{users}, #{state}, #{phone}, #{carid}, #{zhuan})
+    </insert>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from report where reportId = #{reportid}
+    </delete>
+
+</mapper>
+

@@ -11,4 +11,5 @@ import java.util.List;
 public interface JiluDao {
     int add(Jilu jilu);
     List<Jilu> select(Date beginDate, Date endDate);
+    int update(String name,int number);
 }

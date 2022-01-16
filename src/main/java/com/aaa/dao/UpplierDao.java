@@ -4,6 +4,9 @@ import com.aaa.entity.Upplier;
 
 import java.util.List;
 
+/**
+ * 供货商详情
+ */
 public interface UpplierDao {
     int addUpplier(Upplier upplier);
     List<Upplier> select(int id, String name);

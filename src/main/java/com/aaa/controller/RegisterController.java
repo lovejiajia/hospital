@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * 住院部病人
+ */
 @RestController
 @RequestMapping("sel")
 public class RegisterController {

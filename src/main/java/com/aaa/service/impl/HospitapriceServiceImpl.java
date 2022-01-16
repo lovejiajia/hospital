@@ -1,7 +1,9 @@
 package com.aaa.service.impl;
 
 import com.aaa.dao.HospitapriceDao;
+import com.aaa.dao.JiluDao;
 import com.aaa.dao.RegisterDao;
+import com.aaa.dao.WarehuoseDao;
 import com.aaa.entity.Hospitalprice;
 import com.aaa.service.HospitapriceService;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ public class HospitapriceServiceImpl implements HospitapriceService {
     private HospitapriceDao hospitapriceDao;
     @Resource
     private RegisterDao registerDao;
+    @Resource
+    private JiluDao jiluDao;
 
     /**
      * 给病人开药记录，及消费增加

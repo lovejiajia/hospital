@@ -1,13 +1,10 @@
-package com.aaa.dao;
+package com.aaa.service;
 
 import com.aaa.entity.Doctor;
 
 import java.util.List;
 
-/**
- * 医生详情
- */
-public interface DoctorDao {
+public interface DoctorService {
     int addDoctor(Doctor doctor);
     int deleteDoctor(int id);
     List<Doctor> queryById(Doctor doctor);

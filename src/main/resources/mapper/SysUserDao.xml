@@ -27,7 +27,7 @@
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete from sys_user where userid = #{userid}
+        delete from sys_user where userid = #{id}
     </delete>
 
     <insert id="addSysUser" keyProperty="userid" useGeneratedKeys="true">
